@@ -1,55 +1,51 @@
 <?php
-$_htmlHash;
-$_currentHash;
-$_is_debug = false;
 
-function pushHash($tag) {
-  global $_htmlHash;
-  global $_currentHash;
+class HtmlUnicode {
+  private $htmlHash;
+  private $currentHash;
 
-  if (!isset($_htmlHash[$tag])) {
-    $unicode = '"\u' . base_convert($_currentHash, 10, 16) . '"';
+  private function pushHash($tag) {
+    $this->htmlHash;
+    $this->currentHash;
 
-    $_htmlHash[$tag] = json_decode($unicode);
+    if (!isset($this->htmlHash[$tag])) {
+      $unicode = '"\u' . base_convert($this->currentHash, 10, 16) . '"';
 
-    $_currentHash++;
+      $this->htmlHash[$tag] = json_decode($unicode);
+
+      $this->currentHash++;
+    }
+
+    return $this->htmlHash[$tag];
   }
 
-  return $_htmlHash[$tag];
-}
-
-function clearHash() {
-  global $_htmlHash;
-  global $_currentHash;
-
-  $_htmlHash = NULL;
-  $_currentHash = 10240;
-}
-
-function html2plain($html) {
-
-  $document = new DOMDocument();
-  $document->loadHTML($html);
-  $elements = $document->getElementsByTagName('body')->item(0);
-
-  foreach ($elements->childNodes as $node) {
-    $open_tag = htmlentities('<' . $node->tagName . '>');
-    $close_tag = htmlentities('</' . $node->tagName . '>');
-
-    $html = str_replace(html_entity_decode($open_tag), pushHash($open_tag), $html);
-    $html = str_replace(html_entity_decode($close_tag), pushHash($close_tag), $html);
+  public function clearHash() {
+    $this->htmlHash = NULL;
+    $this->currentHash = 10240;
   }
 
-  return $html;
-}
+  public function html2plain($html) {
 
+    $document = new DOMDocument();
+    $document->loadHTML($html);
+    $elements = $document->getElementsByTagName('body')->item(0);
 
-function plain2html($plain) {
-  global $_htmlHash;
+    foreach ($elements->childNodes as $node) {
+      $open_tag = htmlentities('<' . $node->tagName . '>');
+      $close_tag = htmlentities('</' . $node->tagName . '>');
 
-  foreach ($_htmlHash as $tag => $uni) {
-    $plain = str_replace($uni, $tag, $plain);
+      $html = str_replace(html_entity_decode($open_tag), $this->pushHash($open_tag), $html);
+      $html = str_replace(html_entity_decode($close_tag), $this->pushHash($close_tag), $html);
+    }
+
+    return $html;
   }
 
-  return $plain;
+  public function plain2html($plain) {
+    foreach ($this->htmlHash as $tag => $uni) {
+      $plain = str_replace($uni, $tag, $plain);
+    }
+
+    return $plain;
+  }
 }
