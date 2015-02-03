@@ -4,7 +4,7 @@ This is a PHP-port from the examples in the comments here: https://code.google.c
 
 #### Usage
 ```php
-  clearHash();
-  $plain = html2plain($html);
-  $html = plain2html($plain);
+  $htmlUnicode = new HtmlUnicode;
+  $plain = $htmlUnicode->html2plain($html);
+  $html = $htmlUnicode->plain2html($plain);
 ```
