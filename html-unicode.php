@@ -64,11 +64,12 @@ class HtmlUnicode {
     $elements = $document->getElementsByTagName('body')->item(0);
 
     foreach ($elements->childNodes as $node) {
-      $open_tag = htmlentities('/(<' . $node->tagName . ' .*?>)/i');
-      $close_tag = htmlentities('</' . $node->tagName . '>');
+      $open_tag_pattern = '/(<' . $node->tagName . ' .*?>)/i';
+      $open_tag = '<' . $node->tagName . '/>';
+      $close_tag = '</' . $node->tagName . '>';
 
-      $html = preg_replace(html_entity_decode($open_tag), $this->pushHash($open_tag), $html);
-      $html = str_ireplace(html_entity_decode($close_tag), $this->pushHash($close_tag), $html);
+      $html = preg_replace($open_tag_pattern, $this->pushHash($open_tag), $html);
+      $html = str_ireplace($close_tag, $this->pushHash($close_tag), $html);
     }
 
     return $html;
