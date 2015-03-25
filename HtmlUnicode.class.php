@@ -64,8 +64,8 @@ class HtmlUnicode {
     $elements = $document->getElementsByTagName('body')->item(0);
 
     foreach ($elements->childNodes as $node) {
-      $open_tag_pattern = '/(<' . $node->tagName . ' .*?>)/i';
-      $open_tag = '<' . $node->tagName . '/>';
+      $open_tag_pattern = '/<' . $node->tagName . '(\\s.*|)>/uiU';
+      $open_tag = '<' . $node->tagName . '>';
       $close_tag = '</' . $node->tagName . '>';
 
       $html = preg_replace($open_tag_pattern, $this->pushHash($open_tag), $html);
